@@ -502,18 +502,15 @@ function updateAnalyticsHistogram() {
     const barWidth = Math.max(1, availableWidth / totalBars); // Ensure minimum width
     
     const rectHeight = 5; // Small rectangles
-    const maxRectangles = 20; // Limit to prevent performance issues
     
     for (let i = min; i <= max; i++) {
         const freq = analyticsNumberFrequency[i];
-        const barHeight = maxFreq > 0 ? (freq / maxFreq) * (analyticsHistogramCanvas.height - 20) : 0;
         const x = (i - min) * (barWidth + 2); // 2px spacing
         
-        // Draw stacked rectangles with limit
+        // Draw stacked rectangles
         analyticsHistogramCtx.fillStyle = '#2196F3';
         analyticsHistogramCtx.strokeStyle = '#000000';
-        const displayCount = Math.min(freq, maxRectangles);
-        for (let j = 0; j < displayCount; j++) {
+        for (let j = 0; j < freq; j++) {
             const y = analyticsHistogramCanvas.height - 10 - (j * rectHeight) - rectHeight;
             if (y > 0) {
                 analyticsHistogramCtx.fillRect(x, y, barWidth, rectHeight);
