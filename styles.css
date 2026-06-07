@@ -290,7 +290,7 @@ button:disabled {
 }
 
 #resultsList {
-    max-height: 200px;
+    max-height: 680px;
     overflow-y: auto;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
