@@ -1,0 +1,246 @@
+{
+  "items": [
+    {
+      "drawSystemId": 7361,
+      "drawDate": "2026-06-04T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-06-04T22:00:00Z",
+          "drawSystemId": 7361,
+          "gameType": "Lotto",
+          "resultsJson": [46, 43, 41, 20, 13, 17],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-06-04T22:00:00Z",
+          "drawSystemId": 7361,
+          "gameType": "LottoPlus",
+          "resultsJson": [26, 2, 13, 3, 10, 42],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7360,
+      "drawDate": "2026-06-02T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-06-02T22:00:00Z",
+          "drawSystemId": 7360,
+          "gameType": "Lotto",
+          "resultsJson": [28, 20, 36, 8, 39, 31],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-06-02T22:00:00Z",
+          "drawSystemId": 7360,
+          "gameType": "LottoPlus",
+          "resultsJson": [10, 46, 34, 13, 4, 38],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7359,
+      "drawDate": "2026-05-30T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-30T22:00:00Z",
+          "drawSystemId": 7359,
+          "gameType": "Lotto",
+          "resultsJson": [1, 42, 35, 32, 6, 10],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-30T22:00:00Z",
+          "drawSystemId": 7359,
+          "gameType": "LottoPlus",
+          "resultsJson": [32, 19, 25, 46, 2, 47],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7358,
+      "drawDate": "2026-05-28T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-28T22:00:00Z",
+          "drawSystemId": 7358,
+          "gameType": "Lotto",
+          "resultsJson": [7, 22, 15, 42, 43, 6],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-28T22:00:00Z",
+          "drawSystemId": 7358,
+          "gameType": "LottoPlus",
+          "resultsJson": [32, 4, 8, 24, 38, 2],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7357,
+      "drawDate": "2026-05-26T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-26T22:00:00Z",
+          "drawSystemId": 7357,
+          "gameType": "Lotto",
+          "resultsJson": [4, 23, 16, 5, 3, 46],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-26T22:00:00Z",
+          "drawSystemId": 7357,
+          "gameType": "LottoPlus",
+          "resultsJson": [41, 39, 34, 31, 20, 33],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7356,
+      "drawDate": "2026-05-23T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-23T22:00:00Z",
+          "drawSystemId": 7356,
+          "gameType": "Lotto",
+          "resultsJson": [17, 9, 2, 30, 14, 46],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-23T22:00:00Z",
+          "drawSystemId": 7356,
+          "gameType": "LottoPlus",
+          "resultsJson": [29, 25, 32, 23, 1, 43],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7355,
+      "drawDate": "2026-05-21T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-21T22:00:00Z",
+          "drawSystemId": 7355,
+          "gameType": "Lotto",
+          "resultsJson": [24, 44, 42, 11, 28, 21],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-21T22:00:00Z",
+          "drawSystemId": 7355,
+          "gameType": "LottoPlus",
+          "resultsJson": [14, 12, 45, 17, 31, 19],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7354,
+      "drawDate": "2026-05-19T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-19T22:00:00Z",
+          "drawSystemId": 7354,
+          "gameType": "Lotto",
+          "resultsJson": [17, 18, 49, 38, 42, 20],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-19T22:00:00Z",
+          "drawSystemId": 7354,
+          "gameType": "LottoPlus",
+          "resultsJson": [43, 49, 17, 24, 12, 11],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7353,
+      "drawDate": "2026-05-16T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-16T22:00:00Z",
+          "drawSystemId": 7353,
+          "gameType": "Lotto",
+          "resultsJson": [12, 20, 23, 49, 3, 11],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-16T22:00:00Z",
+          "drawSystemId": 7353,
+          "gameType": "LottoPlus",
+          "resultsJson": [42, 28, 18, 3, 1, 20],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    },
+    {
+      "drawSystemId": 7352,
+      "drawDate": "2026-05-14T22:00:00Z",
+      "gameType": "Lotto",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-14T22:00:00Z",
+          "drawSystemId": 7352,
+          "gameType": "Lotto",
+          "resultsJson": [17, 15, 42, 44, 24, 9],
+          "specialResults": []
+        },
+        {
+          "drawDate": "2026-05-14T22:00:00Z",
+          "drawSystemId": 7352,
+          "gameType": "LottoPlus",
+          "resultsJson": [13, 29, 33, 3, 43, 4],
+          "specialResults": []
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": false
+    }
+  ],
+  "meta": {},
+  "code": 200
+}

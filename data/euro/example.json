@@ -1,0 +1,176 @@
+{
+  "items": [
+    {
+      "drawSystemId": 675,
+      "drawDate": "2026-06-05T20:00:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-06-05T20:00:00Z",
+          "drawSystemId": 675,
+          "gameType": "EuroJackpot",
+          "resultsJson": [50, 47, 21, 23, 44],
+          "specialResults": [1, 7]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 674,
+      "drawDate": "2026-06-02T20:15:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-06-02T20:15:00Z",
+          "drawSystemId": 674,
+          "gameType": "EuroJackpot",
+          "resultsJson": [36, 46, 40, 2, 38],
+          "specialResults": [8, 7]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 673,
+      "drawDate": "2026-05-29T20:00:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-29T20:00:00Z",
+          "drawSystemId": 673,
+          "gameType": "EuroJackpot",
+          "resultsJson": [20, 3, 21, 49, 42],
+          "specialResults": [5, 6]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 672,
+      "drawDate": "2026-05-26T20:15:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-26T20:15:00Z",
+          "drawSystemId": 672,
+          "gameType": "EuroJackpot",
+          "resultsJson": [42, 11, 33, 23, 5],
+          "specialResults": [12, 10]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 671,
+      "drawDate": "2026-05-22T20:00:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-22T20:00:00Z",
+          "drawSystemId": 671,
+          "gameType": "EuroJackpot",
+          "resultsJson": [46, 5, 35, 34, 42],
+          "specialResults": [5, 3]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 670,
+      "drawDate": "2026-05-19T20:15:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-19T20:15:00Z",
+          "drawSystemId": 670,
+          "gameType": "EuroJackpot",
+          "resultsJson": [47, 39, 10, 36, 37],
+          "specialResults": [5, 6]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 669,
+      "drawDate": "2026-05-15T20:00:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-15T20:00:00Z",
+          "drawSystemId": 669,
+          "gameType": "EuroJackpot",
+          "resultsJson": [1, 36, 33, 37, 32],
+          "specialResults": [7, 12]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 668,
+      "drawDate": "2026-05-12T20:15:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-12T20:15:00Z",
+          "drawSystemId": 668,
+          "gameType": "EuroJackpot",
+          "resultsJson": [28, 15, 35, 7, 19],
+          "specialResults": [11, 3]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 667,
+      "drawDate": "2026-05-08T20:00:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-08T20:00:00Z",
+          "drawSystemId": 667,
+          "gameType": "EuroJackpot",
+          "resultsJson": [3, 41, 18, 17, 31],
+          "specialResults": [6, 12]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    },
+    {
+      "drawSystemId": 666,
+      "drawDate": "2026-05-05T20:15:00Z",
+      "gameType": "EuroJackpot",
+      "multiplierValue": 0,
+      "results": [
+        {
+          "drawDate": "2026-05-05T20:15:00Z",
+          "drawSystemId": 666,
+          "gameType": "EuroJackpot",
+          "resultsJson": [33, 1, 43, 30, 34],
+          "specialResults": [5, 10]
+        }
+      ],
+      "showSpecialResults": true,
+      "isNewEuroJackpotDraw": true
+    }
+  ],
+  "meta": {},
+  "code": 200
+}

@@ -1,0 +1,1208 @@
+// Function to load lotto data from local JSON file
+function loadLottoData() {
+    lottoData = lottoDB;
+    updateFrequencyWithLottoData();
+    updateAnalytics();
+}
+
+// Function to update frequency tracking with loaded lotto data
+function updateFrequencyWithLottoData() {
+    // Reset frequency tracking
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    
+    initFrequencyTracking();
+    
+    // Get history limit from input or default to all data
+    const historyLimit = parseInt(document.getElementById('historyLimit').value) || lottoData.length;
+    
+    // Process lotto draws within history limit
+    const dataToProcess = lottoData.slice(-historyLimit);
+    dataToProcess.forEach(draw => {
+        console.log('draws parsing'+draw.drawSystemId);
+        if (draw.resultsJson) {
+            draw.resultsJson.forEach(number => {
+                if (numberFrequency.hasOwnProperty(number)) {
+                    numberFrequency[number]++;
+                }
+            });
+        }
+    });
+    
+    // Update analytics and histograms
+    updateAnalytics();
+    updateHistogram();
+    updateAnalyticsHistogram();
+}
+
+// Show page function
+function showPage(pageName) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Remove active class from all menu buttons
+    document.querySelectorAll('.menu button').forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show the requested page
+    document.getElementById(`${pageName}Page`).classList.add('active');
+    
+    // Set active button
+    document.getElementById(`${pageName}MenuBtn`).classList.add('active');
+}
+
+// Function to simulate drawing without repeating numbers
+function drawNumbers() {
+    if (isSpinning) return;
+    
+    // Get range values
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 10;
+    const size = parseInt(sizeInput.value) || 3;
+    const omittedInput = omitInput.value;
+    const fixedInputValue = fixedInput.value;
+    
+    // Validate range
+    if (min >= max) {
+        resultElement.textContent = "Min must be less than Max!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Validate size
+    if (size < 1 || size > 10) {
+        resultElement.textContent = "Number of draws must be between 1 and 10!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Parse fixed numbers
+    const fixedNumbers = parseOmittedNumbers(fixedInputValue);
+    
+    // Check if we have enough numbers
+    const omittedNumbers = parseOmittedNumbers(omittedInput);
+    const totalAvailable = max - min + 1 - omittedNumbers.length;
+    
+    // Validate fixed numbers
+    if (fixedNumbers.length > size) {
+        resultElement.textContent = "Number of fixed numbers cannot exceed number of draws!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Check if fixed numbers are within range
+    for (const num of fixedNumbers) {
+        if (num < min || num > max) {
+            resultElement.textContent = `Fixed number ${num} is outside the specified range!`;
+            resultElement.className = "result";
+            return;
+        }
+    }
+    
+    // Check if fixed numbers conflict with omitted numbers
+    for (const num of fixedNumbers) {
+        if (omittedNumbers.includes(num)) {
+            resultElement.textContent = `Fixed number ${num} is in the omitted list!`;
+            resultElement.className = "result";
+            return;
+        }
+    }
+    
+    // Calculate available numbers for random draws
+    const availableForRandom = totalAvailable - fixedNumbers.length;
+    if (availableForRandom < (size - fixedNumbers.length)) {
+        resultElement.textContent = `Not enough numbers available! ${size - fixedNumbers.length} random draws required, but only ${availableForRandom} available.`;
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Disable button during draw
+    isSpinning = true;
+    startButton.disabled = true;
+    resultElement.textContent = "Drawing...";
+    resultElement.className = "result";
+    
+    // Get all display elements
+    const displays = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    for (let i = 0; i < size; i++) {
+        const display = document.getElementById(`display${i + 1}`);
+        if (display) {
+            displays.push(display);
+            display.textContent = '?';
+        }
+    }
+    
+    // Draw duration parameters
+    const drawDuration = 1000; // 1 second
+    const drawInterval = 100; // Update every 100ms
+    const drawCount = drawDuration / drawInterval;
+    
+    // Start drawing with random numbers
+    let drawCounter = 0;
+    const drawnNumbers = [...fixedNumbers]; // Start with fixed numbers
+    const drawIntervalId = setInterval(() => {
+        displays.forEach(display => {
+            if (display) {
+                display.textContent = getRandomNumberWithoutRepetition(min, max, [...omittedNumbers, ...fixedNumbers], drawnNumbers);
+            }
+        });
+        
+        drawCounter++;
+        if (drawCounter >= drawCount) {
+            clearInterval(drawIntervalId);
+            
+            // Final numbers
+            const finalNumbers = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}            displays.forEach(display => {
+                if (display) {
+                    const finalNumber = getRandomNumberWithoutRepetition(min, max, [...omittedNumbers, ...fixedNumbers], drawnNumbers);
+                    display.textContent = finalNumber;
+                    finalNumbers.push(finalNumber);
+                    drawnNumbers.push(finalNumber);
+                }
+            });
+            
+            // Update frequency tracking
+            finalNumbers.forEach(num => {
+                if (numberFrequency.hasOwnProperty(num)) {
+                    numberFrequency[num]++;
+                }
+            });
+            
+            // Update analytics
+            totalDraws++;
+            updateAnalytics();
+            
+            // Update histogram
+            updateHistogram();
+            
+            // Display results
+            // Keep numbers in draw order (don't sort them)
+            resultElement.textContent = `Drawn numbers: ${finalNumbers.join(', ')}`;
+            resultElement.className = "result";
+            
+            // Store result for display
+            drawResults.push({
+                numbers: finalNumbers,
+                timestamp: new Date()
+            });
+            
+            // Update results list
+            updateResultsList();
+            
+            // Re-enable button
+            isSpinning = false;
+            startButton.disabled = false;
+        }
+    }, drawInterval);
+}
+
+// Function to execute multiple draws
+function executeMultipleDraws() {
+    if (isSpinning || isExecutingMultiple) return;
+    
+    // Get settings
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    const size = parseInt(sizeInput.value) || 6;
+    const omittedInput = omitInput.value;
+    const fixedInputValue = fixedInput.value;
+    const count = parseInt(multipleCountInput.value) || 5;
+    
+    // Validate settings
+    if (count < 1 || count > 100) {
+        resultElement.textContent = "Number of draws must be between 1 and 100!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Validate range
+    if (min >= max) {
+        resultElement.textContent = "Min must be less than Max!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Validate size
+    if (size < 1 || size > 10) {
+        resultElement.textContent = "Number of draws must be between 1 and 10!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Parse fixed numbers
+    const fixedNumbers = parseOmittedNumbers(fixedInputValue);
+    
+    // Validate fixed numbers
+    if (fixedNumbers.length > size) {
+        resultElement.textContent = "Number of fixed numbers cannot exceed number of draws!";
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Check if fixed numbers are within range
+    for (const num of fixedNumbers) {
+        if (num < min || num > max) {
+            resultElement.textContent = `Fixed number ${num} is outside the specified range!`;
+            resultElement.className = "result";
+            return;
+        }
+    }
+    
+    // Check if we have enough numbers
+    const omittedNumbers = parseOmittedNumbers(omittedInput);
+    const totalAvailable = max - min + 1 - omittedNumbers.length;
+    
+    // Check if fixed numbers conflict with omitted numbers
+    for (const num of fixedNumbers) {
+        if (omittedNumbers.includes(num)) {
+            resultElement.textContent = `Fixed number ${num} is in the omitted list!`;
+            resultElement.className = "result";
+            return;
+        }
+    }
+    
+    // Calculate available numbers for random draws
+    const availableForRandom = totalAvailable - fixedNumbers.length;
+    if (availableForRandom < (size - fixedNumbers.length)) {
+        resultElement.textContent = `Not enough numbers available! ${size - fixedNumbers.length} random draws required, but only ${availableForRandom} available.`;
+        resultElement.className = "result";
+        return;
+    }
+    
+    // Disable UI elements
+    isExecutingMultiple = true;
+    startMultipleButton.disabled = true;
+    multipleCountInput.disabled = true;
+    executeMultipleButton.disabled = true;
+    cancelMultipleButton.disabled = true;
+    resultElement.textContent = `Executing ${count} draws...`;
+    resultElement.className = "result";
+    
+    // Keep track of completed draws
+    let completedDraws = 0;
+    
+    // Start drawing multiple times
+    const drawInterval = setInterval(() => {
+        // Perform a single draw
+        drawNumbers();
+        
+        // Update the display with current results
+        completedDraws++;
+        if (completedDraws >= count) {
+            clearInterval(drawInterval);
+            
+            // Show final results
+            resultElement.textContent = `Executed ${count} draws successfully!`;
+            resultElement.className = "result";
+            
+            // Update results list
+            updateResultsList();
+            
+            // Re-enable UI elements
+            isExecutingMultiple = false;
+            startMultipleButton.disabled = false;
+            multipleCountInput.disabled = false;
+            executeMultipleButton.disabled = false;
+            cancelMultipleButton.disabled = false;
+            multipleControls.style.display = 'none';
+        }
+    }, 1200); // Add delay between draws to make them visible
+}
+
+// Helper function to get random number without repetition
+function getRandomNumberWithoutRepetition(min, max, omittedNumbers, drawnNumbers) {
+    let num;
+    do {
+        // Use a more robust approach with better bounds checking
+        const baseNum = Math.floor(Math.random() * (max - min + 1)) + min;
+        
+        // Apply random coefficients with better bounds
+        const randomFactor1 = Math.random() * 0.3 + 0.85; // 0.85 to 1.15
+        const randomFactor2 = Math.sin(Date.now() * 0.001) * 0.1 + 0.95; // 0.95 to 1.05
+        const randomFactor3 = Math.cos(Date.now() * 0.0005) * 0.1 + 0.95; // 0.95 to 1.05
+        
+        // Apply coefficients with bounded adjustment
+        let adjustedNum = Math.floor(baseNum * randomFactor1 * randomFactor2 * randomFactor3);
+        
+        // Ensure the number stays within valid bounds
+        adjustedNum = Math.max(min, Math.min(max, adjustedNum));
+        
+        // Add some additional variation with timestamp
+        const timeVariation = Math.floor((Date.now() % 100) / 10) - 5; // -5 to +5
+        num = Math.max(min, Math.min(max, adjustedNum + timeVariation));
+    } while (omittedNumbers.includes(num) || drawnNumbers.includes(num));
+    return num;
+}
+
+// Helper function to parse omitted numbers
+function parseOmittedNumbers(input) {
+    if (!input) return [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    return input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+}
+
+// Initialize frequency tracking
+function initFrequencyTracking() {
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    
+    numberFrequency = {};
+    for (let i = min; i <= max; i++) {
+        numberFrequency[i] = 0;
+    }
+}
+
+// Create display elements
+function createDisplays() {
+    // Check if sizeInput exists (in case called before DOM is ready)
+    let size = 3;
+    if (sizeInput) {
+        size = parseInt(sizeInput.value) || 3;
+    }
+    const displayContainer = document.getElementById('display');
+    
+    // Clear existing displays
+    displayContainer.innerHTML = '';
+    
+    // Create new displays
+    for (let i = 1; i <= size; i++) {
+        const display = document.createElement('div');
+        display.id = `display${i}`;
+        display.className = 'number-display';
+        display.textContent = '?';
+        displayContainer.appendChild(display);
+    }
+}
+
+// Update histogram
+function updateHistogram() {
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Get min and max values for frequency tracking
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    
+    // Calculate max frequency for scaling
+    let maxFreq = 0;
+    for (let i = min; i <= max; i++) {
+        if (numberFrequency[i] > maxFreq) {
+            maxFreq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        }
+    }
+    
+    // Draw histogram as stacked rectangles
+    // Calculate bar width and spacing to fit within canvas
+    const totalBars = max - min + 1;
+    const totalSpacing = (totalBars - 1) * 2; // 2px spacing between bars
+    const availableWidth = canvas.width - totalSpacing;
+    const barWidth = Math.max(1, availableWidth / totalBars); // Ensure minimum width
+    
+    const rectHeight = 5; // Small rectangles
+    const maxRectangles = 20; // Limit to prevent performance issues
+    
+    // Debug: Log what we're drawing
+    console.log(`Drawing histogram from ${min} to ${max}, barWidth: ${barWidth}, canvas.width: ${canvas.width}`);
+    
+    for (let i = min; i <= max; i++) {
+        const freq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        const barHeight = maxFreq > 0 ? (freq / maxFreq) * (canvas.height - 20) : 0;
+        const x = (i - min) * (barWidth + 2); // 2px spacing
+        
+        // Draw stacked rectangles with limit
+        ctx.fillStyle = '#4CAF50';
+        ctx.strokeStyle = '#000000';
+        const displayCount = Math.min(freq, maxRectangles);
+        for (let j = 0; j < displayCount; j++) {
+            const y = canvas.height - 10 - (j * rectHeight) - rectHeight;
+            if (y > 0) {
+                ctx.fillRect(x, y, barWidth, rectHeight);
+                ctx.strokeRect(x, y, barWidth, rectHeight);
+            }
+        }
+        
+        // Draw number label
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        
+        // Adjust position to prevent clipping at edges
+        let labelX = x + barWidth / 2;
+        if (labelX < 5) {
+            labelX = 5;
+        } else if (labelX > canvas.width - 5) {
+            labelX = canvas.width - 5;
+        }
+        
+        ctx.fillText(i.toString(), labelX, canvas.height - 5);
+    }
+}
+
+// Update analytics histogram
+function updateAnalyticsHistogram() {
+    // Clear canvas
+    analyticsHistogramCtx.clearRect(0, 0, analyticsHistogramCanvas.width, analyticsHistogramCanvas.height);
+    
+    // Get min and max values for frequency tracking
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    
+    // Get history limit from input
+    const historyLimit = parseInt(document.getElementById('historyLimit').value) || lottoData.length;
+    
+    // Calculate max frequency for scaling
+    let maxFreq = 0;
+    for (let i = min; i <= max; i++) {
+        if (numberFrequency[i] > maxFreq) {
+            maxFreq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        }
+    }
+    
+    // Draw histogram as stacked rectangles
+    const barWidth = analyticsHistogramCanvas.width / (max - min + 1);
+    const barSpacing = 2;
+    const rectHeight = 5; // Small rectangles
+    const maxRectangles = 20; // Limit to prevent performance issues
+    
+    for (let i = min; i <= max; i++) {
+        const freq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        const barHeight = maxFreq > 0 ? (freq / maxFreq) * (analyticsHistogramCanvas.height - 20) : 0;
+        const x = (i - min) * (barWidth + barSpacing);
+        
+        // Draw stacked rectangles with limit
+        analyticsHistogramCtx.fillStyle = '#2196F3';
+        analyticsHistogramCtx.strokeStyle = '#000000';
+        const displayCount = Math.min(freq, maxRectangles);
+        for (let j = 0; j < displayCount; j++) {
+            const y = analyticsHistogramCanvas.height - 10 - (j * rectHeight) - rectHeight;
+            if (y > 0) {
+                analyticsHistogramCtx.fillRect(x, y, barWidth, rectHeight);
+                analyticsHistogramCtx.strokeRect(x, y, barWidth, rectHeight);
+            }
+        }
+        
+        // Draw number label
+        analyticsHistogramCtx.fillStyle = '#FFFFFF';
+        analyticsHistogramCtx.font = '10px Arial';
+        analyticsHistogramCtx.textAlign = 'center';
+        
+        // Adjust position to prevent clipping at edges
+        let labelX = x + barWidth / 2;
+        if (labelX < 5) {
+            labelX = 5;
+        } else if (labelX > analyticsHistogramCanvas.width - 5) {
+            labelX = analyticsHistogramCanvas.width - 5;
+        }
+        
+        analyticsHistogramCtx.fillText(i.toString(), labelX, analyticsHistogramCanvas.height - 5);
+    }
+}
+
+// Update analytics histogram
+function updateAnalyticsHistogram() {
+    // Clear canvas
+    analyticsHistogramCtx.clearRect(0, 0, analyticsHistogramCanvas.width, analyticsHistogramCanvas.height);
+    
+    // Get min and max values for frequency tracking
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    
+    // Get history limit from input
+    const historyLimit = parseInt(document.getElementById('historyLimit').value) || lottoData.length;
+    
+    // Calculate max frequency for scaling
+    let maxFreq = 0;
+    for (let i = min; i <= max; i++) {
+        if (numberFrequency[i] > maxFreq) {
+            maxFreq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        }
+    }
+    
+    // Draw histogram as stacked rectangles
+    // Calculate bar width and spacing to fit within canvas
+    const totalBars = max - min + 1;
+    const totalSpacing = (totalBars - 1) * 2; // 2px spacing between bars
+    const availableWidth = analyticsHistogramCanvas.width - totalSpacing;
+    const barWidth = Math.max(1, availableWidth / totalBars); // Ensure minimum width
+    
+    const rectHeight = 5; // Small rectangles
+    const maxRectangles = 20; // Limit to prevent performance issues
+    
+    for (let i = min; i <= max; i++) {
+        const freq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        const barHeight = maxFreq > 0 ? (freq / maxFreq) * (analyticsHistogramCanvas.height - 20) : 0;
+        const x = (i - min) * (barWidth + 2); // 2px spacing
+        
+        // Draw stacked rectangles with limit
+        analyticsHistogramCtx.fillStyle = '#2196F3';
+        analyticsHistogramCtx.strokeStyle = '#000000';
+        const displayCount = Math.min(freq, maxRectangles);
+        for (let j = 0; j < displayCount; j++) {
+            const y = analyticsHistogramCanvas.height - 10 - (j * rectHeight) - rectHeight;
+            if (y > 0) {
+                analyticsHistogramCtx.fillRect(x, y, barWidth, rectHeight);
+                analyticsHistogramCtx.strokeRect(x, y, barWidth, rectHeight);
+            }
+        }
+        
+        // Draw number label
+        analyticsHistogramCtx.fillStyle = '#FFFFFF';
+        analyticsHistogramCtx.font = '10px Arial';
+        analyticsHistogramCtx.textAlign = 'center';
+        
+        // Adjust position to prevent clipping at edges
+        let labelX = x + barWidth / 2;
+        if (labelX < 5) {
+            labelX = 5;
+        } else if (labelX > analyticsHistogramCanvas.width - 5) {
+            labelX = analyticsHistogramCanvas.width - 5;
+        }
+        
+        analyticsHistogramCtx.fillText(i.toString(), labelX, analyticsHistogramCanvas.height - 5);
+    }
+}
+
+// Update analytics stats
+function updateAnalytics() {
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    
+    // Get history limit from input or default to all data
+    const historyLimit = parseInt(document.getElementById('historyLimit').value) || lottoData.length;
+    
+    // Find most and least frequent numbers
+    let maxFreq = 0;
+    let minFreq = Infinity;
+    let mostFrequent = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    let leastFrequent = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    var totalDraws = Math.min(historyLimit, lottoData.length);
+    
+    for (let i = min; i <= max; i++) {
+        const freq = numberFrequency[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}        if (freq > maxFreq) {
+            maxFreq = freq;
+            mostFrequent = [i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}            console.log('mostFrequent'+mostFrequent);
+        } else if (freq === maxFreq && freq > 0) {
+            mostFrequent.push(i);
+        }
+        
+        if (freq < minFreq && freq > 0) {
+            minFreq = freq;
+            leastFrequent = [i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}            console.log('leastFrequent'+leastFrequent);
+        } else if (freq === minFreq && freq > 0) {
+            leastFrequent.push(i);
+        }
+    }
+    
+    // Get top 3 most frequent numbers
+    let top3MostFrequent = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    let top3LeastFrequent = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    
+    // Create array of number-frequency pairs and sort
+    const freqPairs = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    for (let i = min; i <= max; i++) {
+        if (numberFrequency[i] > 0) {
+            freqPairs.push({number: i, frequency: numberFrequency[i]});
+        }
+    }
+    
+    // Sort by frequency (descending for most frequent, ascending for least frequent)
+    freqPairs.sort((a, b) => b.frequency - a.frequency);
+    top3MostFrequent = freqPairs.slice(0, 3).map(pair => pair.number);
+    
+    freqPairs.sort((a, b) => a.frequency - b.frequency);
+    top3LeastFrequent = freqPairs.slice(0, 3).map(pair => pair.number);
+    
+    // Find numbers that were not drawn at all
+    let notDrawnNumbers = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    for (let i = min; i <= max; i++) {
+        if (numberFrequency[i] === 0) {
+            notDrawnNumbers.push(i);
+        }
+    }
+    
+    // Update analytics stats display
+    analyticsStats.innerHTML = `
+        <div class="analytics-stat">
+            <div class="stat-label">Total Draws:</div>
+            <div class="stat-value">${totalDraws}</div>
+        </div>
+        <div class="analytics-stat">
+            <div class="stat-label">Most Frequent:</div>
+            <div class="stat-value">${mostFrequent.join(', ') || 'None'}</div>
+        </div>
+        <div class="analytics-stat">
+            <div class="stat-label">Least Frequent:</div>
+            <div class="stat-value">${leastFrequent.join(', ') || 'None'}</div>
+        </div>
+        <div class="analytics-stat">
+            <div class="stat-label">Top 3 Most Frequent:</div>
+            <div class="stat-value">${top3MostFrequent.join(', ') || 'None'}</div>
+        </div>
+        <div class="analytics-stat">
+            <div class="stat-label">Top 3 Least Frequent:</div>
+            <div class="stat-value">${top3LeastFrequent.join(', ') || 'None'}</div>
+        </div>
+        <div class="analytics-stat">
+            <div class="stat-label">Not Drawn Numbers:</div>
+            <div class="stat-value">${notDrawnNumbers.join(', ') || 'None'}</div>
+        </div>
+    `;
+    
+    // Update analytics histogram
+    updateAnalyticsHistogram();
+}
+
+// Global DOM elements
+let minInput, maxInput, sizeInput, omitInput, fixedInput, startButton, displayContainer, resultElement, canvas, ctx, analyticsStats;
+let startMultipleButton, multipleCountInput, executeMultipleButton, cancelMultipleButton, multipleControls;
+
+// DOMContentLoaded event handler
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM elements for draw page
+    minInput = document.getElementById('min');
+    maxInput = document.getElementById('max');
+    sizeInput = document.getElementById('size');
+    omitInput = document.getElementById('omit');
+    fixedInput = document.getElementById('fixed');
+    startButton = document.getElementById('startButton');
+    startMultipleButton = document.getElementById('startMultipleButton');
+    multipleCountInput = document.getElementById('multipleCount');
+    executeMultipleButton = document.getElementById('executeMultipleButton');
+    cancelMultipleButton = document.getElementById('cancelMultipleButton');
+    multipleControls = document.getElementById('multipleControls');
+    displayContainer = document.getElementById('display');
+    resultElement = document.getElementById('result');
+    canvas = document.getElementById('histogramCanvas');
+    ctx = canvas.getContext('2d');
+    resetButton = document.getElementById('resetButton');
+    resultsList = document.getElementById('resultsList');
+    
+    // DOM elements for analytics page
+    analyticsStats = document.getElementById('analyticsStats');
+    analyticsHistogramCanvas = document.getElementById('analyticsHistogramCanvas');
+    analyticsHistogramCtx = analyticsHistogramCanvas.getContext('2d');
+    recordList = document.getElementById('recordList');
+    
+    // Set up initial state
+    createDisplays();
+    initFrequencyTracking();
+    
+    // Initialize analytics
+    updateAnalytics();
+    
+    // Update displays when size changes
+    sizeInput.addEventListener('change', function() {
+        createDisplays();
+        initFrequencyTracking();
+    });
+    
+    // Update histogram when range changes
+    minInput.addEventListener('change', initFrequencyTracking);
+    maxInput.addEventListener('change', initFrequencyTracking);
+    
+    // Event listener for the draw button
+    startButton.addEventListener('click', drawNumbers);
+    
+    // Event listener for multiple draws button
+    startMultipleButton.addEventListener('click', function() {
+        multipleControls.style.display = 'block';
+        multipleCountInput.focus();
+    });
+    
+    // Event listener for execute multiple button
+    executeMultipleButton.addEventListener('click', executeMultipleDraws);
+    
+    // Event listener for cancel multiple button
+    cancelMultipleButton.addEventListener('click', function() {
+        multipleControls.style.display = 'none';
+    });
+    
+    // Event listener for reset button
+    resetButton.addEventListener('click', resetResults);
+    
+    // Initialize results list
+    updateResultsList();
+    
+    // Also allow Enter key to trigger draw
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            // If multiple controls are visible, execute multiple draws
+            if (multipleControls.style.display !== 'none') {
+                executeMultipleDraws();
+            } else {
+                drawNumbers();
+            }
+        }
+    });
+    
+    // Update analytics when switching to analytics page
+    document.getElementById('analyticsMenuBtn').addEventListener('click', function() {
+        updateAnalytics();
+        // Load lotto data if not already loaded
+        if (lottoData.length === 0) {
+            loadLottoData();
+        }
+    });
+    
+    // Update analytics when history limit changes
+    document.getElementById('historyLimit').addEventListener('change', function() {
+        // Re-calculate frequency tracking with new history limit
+        updateFrequencyWithLottoData();
+    });
+    
+    // Allow Enter key to update analytics when history limit is focused
+    document.getElementById('historyLimit').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            updateAnalytics();
+        }
+    });
+    
+    // Show records when button is clicked
+    document.getElementById('showRecordsBtn').addEventListener('click', showRecords);
+    
+    // Handle window resize to resize canvases
+    window.addEventListener('resize', function() {
+        // Resize histogram canvas to fit container width
+        const histogramContainer = document.querySelector('.histogram-container');
+        if (histogramContainer) {
+            const containerWidth = histogramContainer.clientWidth;
+            if (containerWidth > 0) {
+                canvas.width = containerWidth;
+                updateHistogram();
+            }
+        }
+        
+        // Resize analytics histogram canvas to fit container width
+        const analyticsHistogramContainer = document.querySelector('.analytics-container');
+        if (analyticsHistogramContainer) {
+            const containerWidth = analyticsHistogramContainer.clientWidth;
+            if (containerWidth > 0) {
+                analyticsHistogramCanvas.width = containerWidth;
+                updateAnalyticsHistogram();
+            }
+        }
+    });
+    
+    // Initial resize on load
+    window.dispatchEvent(new Event('resize'));
+});
+
+// Function to reset results
+function resetResults() {
+    drawResults = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}    updateResultsList();
+}
+
+// Function to show records
+function showRecords() {
+    const recordLimit = parseInt(document.getElementById('recordLimit').value) || 10;
+    const limit = Math.min(recordLimit, lottoData.length);
+    
+    if (recordList) {
+        recordList.innerHTML = '';
+        
+        if (lottoData.length === 0) {
+            recordList.innerHTML = '<p>No data available.</p>';
+            return;
+        }
+        
+        // Create container for records with same styling as history list
+        const recordsContainer = document.createElement('div');
+        recordsContainer.className = 'results-container';
+        
+        // Display records
+        for (let i = 0; i < limit; i++) {
+            const record = lottoData[i};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+            
+            // Format the numbers with leading zeros - maintain draw order
+            // The original resultsJson array already contains numbers in draw order
+            const numbers = record.resultsJson.map(num => num < 10 ? `0${num}` : num.toString());
+            
+            // Calculate distances between consecutive numbers
+            let distances = '';
+            let sum = '';
+            if (record.resultsJson.length >= 2) {
+                const distancesArray = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}                let total = 0;
+                for (let j = 0; j < record.resultsJson.length - 1; j++) {
+                    const distance = Math.abs(record.resultsJson[j] - record.resultsJson[j + 1]);
+                    distancesArray.push(distance.toString().padStart(2, '0')); // Pad to 2 digits
+                    total += distance;
+                }
+                distances = distancesArray.join('\t');
+                sum = total.toString().padStart(3, '0'); // Pad to 3 digits
+            }
+            
+            // Combine numbers and distances with border column
+            if (distances) {
+                // Make only distances blue, keep numbers in default color
+                resultItem.innerHTML = `
+                    <span>${numbers.join('\t')}</span>
+                    <span style="color: #add8e6; font-weight: bold;">|</span>
+                    <span style="color: #add8e6; font-weight: bold;">${distances}</span>
+                    <span style="color: #add8e6; font-weight: bold;">|</span>
+                    <span style="color: #ffff00; font-weight: bold;">${sum}</span>
+                `;
+            } else {
+                resultItem.textContent = numbers.join('\t');
+            }
+            
+            recordsContainer.appendChild(resultItem);
+        }
+        
+        recordList.appendChild(recordsContainer);
+    }
+}
+        
+// Function to update results list display
+function updateResultsList() {
+    const resultsList = document.getElementById('resultsList');
+    if (!resultsList) return;
+    
+    // Clear existing content
+    resultsList.innerHTML = '';
+    
+    // Show a message if no results
+    if (drawResults.length === 0) {
+        resultsList.innerHTML = '<p>No results yet.</p>';
+        return;
+    }
+    
+    // Create container for results
+    const resultsContainer = document.createElement('div');
+    resultsContainer.className = 'results-container';
+    
+    // Display results in reverse order (most recent first) with only numbers
+    drawResults.slice().reverse().forEach((result, index) => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'result-item';
+        
+        // Format numbers with leading zero for single digits
+        const formattedNumbers = result.numbers.map(num => num < 10 ? `0${num}` : num.toString());
+        
+        // Calculate distances between consecutive numbers
+        let distances = '';
+        let sum = '';
+        if (result.numbers.length >= 2) {
+            const distancesArray = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}            let total = 0;
+            for (let j = 0; j < result.numbers.length - 1; j++) {
+                const distance = Math.abs(result.numbers[j] - result.numbers[j + 1]);
+                distancesArray.push(distance.toString().padStart(2, '0')); // Pad to 2 digits
+                total += distance;
+            }
+            distances = distancesArray.join('\t');
+            sum = total.toString().padStart(3, '0'); // Pad to 3 digits
+        }
+        
+        // Combine numbers, distances and sum with same styling as analytics
+        if (distances) {
+            resultItem.innerHTML = `
+                <span>${formattedNumbers.join('\t')}</span>
+                <span style="color: #add8e6; font-weight: bold;">|</span>
+                <span style="color: #add8e6; font-weight: bold;">${distances}</span>
+                <span style="color: #add8e6; font-weight: bold;">|</span>
+                <span style="color: #ffff00; font-weight: bold;">${sum}</span>
+            `;
+        } else {
+            resultItem.textContent = formattedNumbers.join('\t');
+        }
+        
+        resultsContainer.appendChild(resultItem);
+    });
+    
+    resultsList.appendChild(resultsContainer);
+}
+
+// Global variables
+let lottoData = [};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}let numberFrequency = {};
+let totalDraws = 0;
+let isSpinning = false;
+let isExecutingMultiple = false;
+let multipleDrawsInterval = null;
+let drawResults = []; // Store draw results for display
+
+let lottoDB = [
+  {
+    "drawSystemId": 7361,
+    "drawDate": "2026-06-04T22:00:00Z",
+    "resultsJson": [46, 43, 41, 20, 13, 17]
+  },
+  {
+    "drawSystemId": 7360,
+    "drawDate": "2026-06-02T22:00:00Z",
+    "resultsJson": [28, 20, 36, 8, 39, 31]
+  },
+  {
+    "drawSystemId": 7359,
+    "drawDate": "2026-05-30T22:00:00Z",
+    "resultsJson": [1, 42, 35, 32, 6, 10]
+  },
+  {
+    "drawSystemId": 7358,
+    "drawDate": "2026-05-28T22:00:00Z",
+    "resultsJson": [7, 22, 15, 42, 43, 6]
+  },
+  {
+    "drawSystemId": 7357,
+    "drawDate": "2026-05-26T22:00:00Z",
+    "resultsJson": [4, 23, 16, 5, 3, 46]
+  },
+  {
+    "drawSystemId": 7356,
+    "drawDate": "2026-05-23T22:00:00Z",
+    "resultsJson": [17, 9, 2, 30, 14, 46]
+  },
+  {
+    "drawSystemId": 7355,
+    "drawDate": "2026-05-21T22:00:00Z",
+    "resultsJson": [24, 44, 42, 11, 28, 21]
+  },
+  {
+    "drawSystemId": 7354,
+    "drawDate": "2026-05-19T22:00:00Z",
+    "resultsJson": [17, 18, 49, 38, 42, 20]
+  },
+  {
+    "drawSystemId": 7353,
+    "drawDate": "2026-05-16T22:00:00Z",
+    "resultsJson": [12, 20, 23, 49, 3, 11]
+  },
+  {
+    "drawSystemId": 7352,
+    "drawDate": "2026-05-14T22:00:00Z",
+    "resultsJson": [17, 15, 42, 44, 24, 9]
+  },
+  {
+    "drawSystemId": 7351,
+    "drawDate": "2026-05-12T22:00:00Z",
+    "resultsJson": [16, 7, 43, 8, 34, 42]
+  }
+};
+
+// Helper function to calculate distance sum for a set of numbers
+function calculateDistanceSum(numbers) {
+    if (numbers.length < 2) return 0;
+    let sum = 0;
+    for (let i = 0; i < numbers.length - 1; i++) {
+        sum += Math.abs(numbers[i] - numbers[i + 1]);
+    }
+    return sum;
+}
+

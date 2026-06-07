@@ -1,0 +1,112 @@
+[
+  {
+    "drawSystemId": 675,
+    "drawDate": "2026-06-05T20:00:00Z",
+    "resultsJson": [
+      50,
+      47,
+      21,
+      23,
+      44
+    ]
+  },
+  {
+    "drawSystemId": 674,
+    "drawDate": "2026-06-02T20:15:00Z",
+    "resultsJson": [
+      36,
+      46,
+      40,
+      2,
+      38
+    ]
+  },
+  {
+    "drawSystemId": 673,
+    "drawDate": "2026-05-29T20:00:00Z",
+    "resultsJson": [
+      20,
+      3,
+      21,
+      49,
+      42
+    ]
+  },
+  {
+    "drawSystemId": 672,
+    "drawDate": "2026-05-26T20:15:00Z",
+    "resultsJson": [
+      42,
+      11,
+      33,
+      23,
+      5
+    ]
+  },
+  {
+    "drawSystemId": 671,
+    "drawDate": "2026-05-22T20:00:00Z",
+    "resultsJson": [
+      46,
+      5,
+      35,
+      34,
+      42
+    ]
+  },
+  {
+    "drawSystemId": 670,
+    "drawDate": "2026-05-19T20:15:00Z",
+    "resultsJson": [
+      47,
+      39,
+      10,
+      36,
+      37
+    ]
+  },
+  {
+    "drawSystemId": 669,
+    "drawDate": "2026-05-15T20:00:00Z",
+    "resultsJson": [
+      1,
+      36,
+      33,
+      37,
+      32
+    ]
+  },
+  {
+    "drawSystemId": 668,
+    "drawDate": "2026-05-12T20:15:00Z",
+    "resultsJson": [
+      28,
+      15,
+      35,
+      7,
+      19
+    ]
+  },
+  {
+    "drawSystemId": 667,
+    "drawDate": "2026-05-08T20:00:00Z",
+    "resultsJson": [
+      3,
+      41,
+      18,
+      17,
+      31
+    ]
+  },
+  {
+    "drawSystemId": 666,
+    "drawDate": "2026-05-05T20:15:00Z",
+    "resultsJson": [
+      33,
+      1,
+      43,
+      30,
+      34
+    ]
+  }
+]

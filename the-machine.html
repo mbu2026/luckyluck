@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Random Number Draw Machine</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Random Number Draw Machine 🎲</h1>
+        
+        <div class="menu">
+            <button id="drawMenuBtn" class="active" onclick="showPage('draw')">Draw Numbers</button>
+            <button id="analyticsMenuBtn" onclick="showPage('analytics')">Analytics</button>
+        </div>
+        
+        <!-- Draw Numbers Page -->
+        <div id="drawPage" class="page active">
+            <div class="controls">
+                <div class="range-inputs">
+                    <label for="min">Min:</label>
+                    <input type="number" id="min" value="1" min="0" max="100">
+                    
+                    <label for="max">Max:</label>
+                    <input type="number" id="max" value="49" min="1" max="100">
+                </div>
+                
+                <div class="size-control">
+                    <label for="size">Number of Draws:</label>
+                    <input type="number" id="size" value="6" min="1" max="10">
+                </div>
+                
+                <div class="omit-control">
+                    <label for="omit">Omit Numbers (comma separated):</label>
+                    <input type="text" id="omit" placeholder="e.g., 1, 15, 23">
+                </div>
+                
+                <div class="fixed-control">
+                    <label for="fixed">Fixed Numbers (comma separated):</label>
+                    <input type="text" id="fixed" placeholder="e.g., 5, 10, 25">
+                </div>
+                
+                <div class="size-control">
+                    <label for="minDistanceSum">Min Distance Sum:</label>
+                    <input type="number" id="minDistanceSum" value="0" min="0" max="1000">
+                </div>
+                
+                <div class="size-control">
+                    <label for="maxDistanceSum">Max Distance Sum:</label>
+                    <input type="number" id="maxDistanceSum" value="1000" min="0" max="1000">
+                </div>
+            </div>
+            
+            <div class="display-container">
+                <div class="display" id="display">
+                    <!-- Dynamic displays will be created here -->
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button id="startButton">DRAW NUMBERS!</button>
+                <button id="startMultipleButton" style="margin-left: 10px;">DRAW MULTIPLE!</button>
+            </div>
+            
+            <div class="multiple-controls" style="margin-top: 10px; display: none;" id="multipleControls">
+                <label for="multipleCount">Number of Draws:</label>
+                <input type="number" id="multipleCount" value="5" min="1" max="100">
+                <button id="executeMultipleButton" style="margin-left: 10px;">EXECUTE</button>
+                <button id="cancelMultipleButton" style="margin-left: 10px;">CANCEL</button>
+            </div>
+            
+            <div class="result" id="result"></div>
+            
+            <div class="histogram-container">
+                <div class="histogram-title">Number Frequency Histogram</div>
+                <canvas id="histogramCanvas" width="1000" height="200"></canvas>
+            </div>
+            
+            <div class="results-container">
+                <h3>Draw Results</h3>
+                <div id="resultsList"></div>
+                <button id="resetButton" style="margin-top: 10px;">Reset Results</button>
+            </div>
+        </div>
+        
+        <!-- Analytics Page -->
+        <div id="analyticsPage" class="page">
+            <div class="analytics-container">
+                <div class="analytics-title">Drawing Statistics</div>
+                <div class="analytics-stats" id="analyticsStats">
+                    <!-- Analytics stats will be populated here -->
+                </div>
+                <div style="margin-top: 20px;">
+                    <label for="historyLimit">History Limit (records):</label>
+                    <input type="number" id="historyLimit" value="10" min="1" max="100">
+                    <button id="loadLottoDataBtn" onclick="loadLottoData()">Lotto Data</button>
+                </div>
+                <div class="histogram-container" style="margin-top: 20px;">
+                    <div class="histogram-title">Analytics Histogram</div>
+                    <canvas id="analyticsHistogramCanvas" width="1000" height="200"></canvas>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label for="recordLimit">Record Limit (for display):</label>
+                    <input type="number" id="recordLimit" value="10" min="1" max="100">
+                    <button id="showRecordsBtn" onclick="showRecords()">Show Records</button>
+                </div>
+                <div id="recordList" style="margin-top: 10px;"></div>
+                <div id="lottoStatus" style="margin-top: 10px; font-style: italic;"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+</html>
