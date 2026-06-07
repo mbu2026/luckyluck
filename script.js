@@ -140,9 +140,18 @@ function drawNumbers() {
         const display = document.getElementById(`display${i + 1}`);
         if (display) {
             displays.push(display);
-            display.textContent = '?';
         }
     }
+    
+    // Place fixed numbers in first displays
+    const drawnNumbers = [...fixedNumbers];
+    displays.forEach((display, index) => {
+        if (index < fixedNumbers.length) {
+            display.textContent = fixedNumbers[index];
+        } else {
+            display.textContent = '?';
+        }
+    });
     
     // Draw duration parameters
     const drawDuration = 100; // 0.1 second
@@ -151,9 +160,9 @@ function drawNumbers() {
     
     // Start drawing with random numbers
     let drawCounter = 0;
-    const drawnNumbers = [...fixedNumbers]; // Start with fixed numbers
+    const randomDisplays = displays.filter((_, index) => index >= fixedNumbers.length);
     const drawIntervalId = setInterval(() => {
-        displays.forEach(display => {
+        randomDisplays.forEach(display => {
             if (display) {
                 display.textContent = getRandomNumberWithoutRepetition(min, max, [...omittedNumbers, ...fixedNumbers], drawnNumbers);
             }
@@ -164,8 +173,8 @@ function drawNumbers() {
             clearInterval(drawIntervalId);
             
             // Final numbers
-            const finalNumbers = [];
-            displays.forEach(display => {
+            const finalNumbers = [...fixedNumbers];
+            randomDisplays.forEach(display => {
                 if (display) {
                     const finalNumber = getRandomNumberWithoutRepetition(min, max, [...omittedNumbers, ...fixedNumbers], drawnNumbers);
                     display.textContent = finalNumber;
