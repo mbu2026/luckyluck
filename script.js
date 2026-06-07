@@ -147,8 +147,8 @@ function drawNumbers() {
     }
     
     // Draw duration parameters
-    const drawDuration = 1000; // 1 second
-    const drawInterval = 100; // Update every 100ms
+    const drawDuration = 100; // 0.1 second
+    const drawInterval = 10; // Update every 10ms
     const drawCount = drawDuration / drawInterval;
     
     // Start drawing with random numbers
@@ -792,24 +792,28 @@ function showRecords() {
             
             // Calculate distances between consecutive numbers
             let distances = '';
+            let sum = '';
             if (record.resultsJson.length >= 2) {
                 const distancesArray = [];
+                let total = 0;
                 for (let j = 0; j < record.resultsJson.length - 1; j++) {
                     const distance = Math.abs(record.resultsJson[j] - record.resultsJson[j + 1]);
                     distancesArray.push(distance.toString().padStart(2, '0')); // Pad to 2 digits
+                    total += distance;
                 }
                 distances = distancesArray.join('\t');
+                sum = total.toString().padStart(3, '0'); // Pad to 3 digits
             }
             
-            // Combine numbers and distances with border column
+            // Combine numbers, distances and sum with same styling as draw page
             if (distances) {
-                // Create border column with | character
-                const borderColumn = '|';
-                
-                // Make only distances blue, keep numbers in default color
-                resultItem.textContent = numbers.join('\t') + '\t' + borderColumn + '\t' + distances;
-                resultItem.style.color = '#add8e6';
-                resultItem.style.fontWeight = 'bold';
+                resultItem.innerHTML = `
+                    <span>${numbers.join('\t')}</span>
+                    <span style="color: #add8e6; font-weight: bold;">|</span>
+                    <span style="color: #add8e6; font-weight: bold;">${distances}</span>
+                    <span style="color: #add8e6; font-weight: bold;">|</span>
+                    <span style="color: #ffff00; font-weight: bold;">${sum}</span>
+                `;
             } else {
                 resultItem.textContent = numbers.join('\t');
             }
