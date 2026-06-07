@@ -306,3 +306,20 @@ button:disabled {
 .result-item:last-child {
     border-bottom: none;
 }
+
+.matrix-container {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: left;
+    max-height: 1000px;
+    overflow-y: auto;
+}
+
+#drawMatrixCanvas {
+    border: 1px solid #ffd700;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    max-width: 100%;
+}

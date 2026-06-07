@@ -17,7 +17,7 @@ function updateFrequencyWithLottoData() {
     const historyLimit = parseInt(document.getElementById('historyLimit').value) || lottoData.length;
     
     // Process lotto draws within history limit
-    const dataToProcess = lottoData.slice(-historyLimit);
+    const dataToProcess = lottoData.slice(0, historyLimit);
     dataToProcess.forEach(draw => {
         if (draw.resultsJson) {
             draw.resultsJson.forEach(number => {
@@ -544,6 +544,74 @@ function updateAnalyticsHistogram() {
     }
 }
 
+// Update draw matrix showing numbers per draw
+function updateDrawMatrix() {
+    const canvas = document.getElementById('drawMatrixCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    const historyLimit = parseInt(document.getElementById('historyLimit').value) || lottoData.length;
+
+    const dataToProcess = lottoData.slice(0, historyLimit);
+    const drawCount = dataToProcess.length;
+    if (drawCount === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    const numRange = max - min + 1;
+    const labelWidth = 55;
+    const topMargin = 18;
+    const bottomMargin = 5;
+    const cellSize = Math.max(4, (canvas.width - labelWidth - 10) / numRange);
+
+    const chartWidth = numRange * cellSize;
+    const chartHeight = drawCount * cellSize;
+
+    canvas.height = (chartHeight + topMargin + bottomMargin) * 2;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw cells
+    dataToProcess.forEach((draw, index) => {
+        const y = topMargin + index * cellSize;
+        const drawnNumbers = draw.resultsJson.filter(num => num >= min && num <= max);
+        for (let i = min; i <= max; i++) {
+            const x = labelWidth + (i - min) * cellSize;
+            if (drawnNumbers.includes(i)) {
+                ctx.fillStyle = '#4CAF50';
+                ctx.fillRect(x, y, cellSize, cellSize);
+                ctx.strokeStyle = '#CCFF00';
+                ctx.strokeRect(x, y, cellSize, cellSize);
+            } else {
+                ctx.strokeStyle = '#555';
+                ctx.strokeRect(x, y, cellSize, cellSize);
+            }
+        }
+    });
+
+    // X-axis labels at top
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'center';
+    for (let i = min; i <= max; i++) {
+        const x = labelWidth + (i - min) * cellSize + cellSize / 2;
+        ctx.fillText(i, x, 12);
+    }
+
+    // Y-axis labels (draw IDs)
+    ctx.textAlign = 'right';
+    ctx.font = '9px Arial';
+    const yLabelStep = Math.max(1, Math.floor(drawCount / 50));
+    dataToProcess.forEach((draw, index) => {
+        if (index % yLabelStep === 0 || index === drawCount - 1) {
+            const y = topMargin + index * cellSize + cellSize / 2 + 3;
+            ctx.fillText(draw.drawSystemId.toString(), labelWidth - 4, y);
+        }
+    });
+}
+
 // Update analytics stats
 function updateAnalytics() {
     const min = parseInt(minInput.value) || 1;
@@ -633,6 +701,7 @@ function updateAnalytics() {
     
     // Update analytics histogram
     updateAnalyticsHistogram();
+    updateDrawMatrix();
 }
 
 // Global DOM elements
@@ -766,6 +835,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    
+    // Handle resize for draw matrix
+    const drawMatrixCanvas = document.getElementById('drawMatrixCanvas');
+    if (drawMatrixCanvas) {
+        const matrixContainer = document.querySelector('.matrix-container');
+        if (matrixContainer) {
+            const containerWidth = matrixContainer.clientWidth;
+            if (containerWidth > 0) {
+                drawMatrixCanvas.width = containerWidth;
+            }
+        }
+    }
     
     // Initial resize on load
     window.dispatchEvent(new Event('resize'));
