@@ -134,6 +134,27 @@
                 </div>
                 <div id="coStats" style="margin-top: 10px; font-size: 14px; opacity: 0.9;"></div>
             </div>
+
+            <div class="analytics-container" style="margin-top: 20px;">
+                <div class="analytics-title">Draw Occurrence Map</div>
+                <p style="font-size: 14px; opacity: 0.8; margin-bottom: 10px;">Shows which numbers from a range appeared in each draw. X-axis = draws in order, Y-axis = numbers.</p>
+                <div style="margin-bottom: 15px;">
+                    <label for="occStart">Start number:</label>
+                    <input type="number" id="occStart" value="1" min="1" max="100" style="width: 80px; padding: 8px; border-radius: 10px; border: 2px solid #ffd700; background: rgba(255,255,255,0.9); text-align: center; font-size: 14px; margin-left: 8px;">
+                    <label for="occEnd" style="margin-left: 15px;">End number:</label>
+                    <input type="number" id="occEnd" value="10" min="1" max="100" style="width: 80px; padding: 8px; border-radius: 10px; border: 2px solid #ffd700; background: rgba(255,255,255,0.9); text-align: center; font-size: 14px; margin-left: 8px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="occDrawCount">Draws to analyze:</label>
+                    <input type="number" id="occDrawCount" value="10" min="1" max="1000" style="width: 80px; padding: 8px; border-radius: 10px; border: 2px solid #ffd700; background: rgba(255,255,255,0.9); text-align: center; font-size: 14px; margin-left: 8px;">
+                    <button id="occAnalyzeBtn" style="margin-left: 10px; padding: 8px 20px; font-size: 14px;">SHOW</button>
+                </div>
+                <div class="histogram-container" style="overflow-x: auto;">
+                    <div class="histogram-title">Draw Occurrence Map</div>
+                    <canvas id="occCanvas" width="1000" height="200"></canvas>
+                </div>
+                <div id="occStats" style="margin-top: 10px; font-size: 14px; opacity: 0.9;"></div>
+            </div>
         </div>
     </div>
     <script src="./script.js"></script>

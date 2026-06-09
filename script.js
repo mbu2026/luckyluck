@@ -846,6 +846,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+        
+        // Resize occurrence map canvas
+        const occCanvas = document.getElementById('occCanvas');
+        if (occCanvas) {
+            const occContainer = occCanvas.parentElement;
+            if (occContainer) {
+                const containerWidth = occContainer.clientWidth;
+                if (containerWidth > 0) {
+                    occCanvas.width = containerWidth;
+                }
+            }
+        }
     });
     
     // Handle resize for draw matrix
@@ -884,6 +896,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Draw occurrence map wiring
+    const occAnalyzeBtn = document.getElementById('occAnalyzeBtn');
+    const occStartInput = document.getElementById('occStart');
+    const occEndInput = document.getElementById('occEnd');
+    const occDrawCountInput = document.getElementById('occDrawCount');
+    
+    if (occAnalyzeBtn) {
+        occAnalyzeBtn.addEventListener('click', updateOccMap);
+    }
+    
+    [occStartInput, occEndInput, occDrawCountInput].forEach(input => {
+        if (input) {
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    updateOccMap();
+                }
+            });
+        }
+    });
     
     // Initial resize on load
     window.dispatchEvent(new Event('resize'));
@@ -1142,6 +1174,100 @@ function updateCoHistogram() {
         <div>Draws analyzed: <strong>${limit}</strong> | Draws containing target: <strong>${qualifyingDraws}</strong></div>
         <div>Top co-occurring numbers: <strong>${top5 || 'None'}</strong></div>
         <div style="margin-top: 5px; font-size: 12px; color: #FF9800;">Orange bars = co-occurrence count | <span style="color: #FF5722;">Red/orange bars</span> = specified number (shown if drawn alongside itself)</div>
+    `;
+}
+
+// Draw occurrence map function
+function updateOccMap() {
+    const canvas = document.getElementById('occCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const occStart = parseInt(document.getElementById('occStart').value) || 1;
+    const occEnd = parseInt(document.getElementById('occEnd').value) || 10;
+    const drawCount = parseInt(document.getElementById('occDrawCount').value) || 10;
+    const occStats = document.getElementById('occStats');
+
+    if (occStart > occEnd) {
+        occStats.textContent = 'Start number must be less than or equal to end number.';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    if (lottoData.length === 0) {
+        occStats.textContent = 'No data loaded. Click Analytics menu to load data.';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    const limit = Math.min(drawCount, lottoData.length);
+    const dataToProcess = lottoData.slice(0, limit);
+    const numRange = occEnd - occStart + 1;
+
+    // Layout
+    const labelWidth = 30;
+    const topMargin = 20;
+    const bottomMargin = 20;
+    const rightMargin = 10;
+    const cellSize = Math.max(8, Math.min(20, (canvas.width - labelWidth - rightMargin) / limit));
+    const cellHeight = Math.max(8, Math.min(20, (canvas.height - topMargin - bottomMargin) / numRange));
+
+    const chartWidth = limit * cellSize + labelWidth + rightMargin;
+    const chartHeight = numRange * cellHeight + topMargin + bottomMargin;
+
+    canvas.width = Math.max(chartWidth, 300);
+    canvas.height = Math.max(chartHeight, 100);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw cells
+    dataToProcess.forEach((draw, drawIdx) => {
+        const x = labelWidth + drawIdx * cellSize;
+        const drawnNumbers = draw.resultsJson;
+
+        for (let num = occStart; num <= occEnd; num++) {
+            const y = topMargin + (num - occStart) * cellHeight;
+            const isDrawn = drawnNumbers.includes(num);
+            if (isDrawn) {
+                ctx.fillStyle = '#4CAF50';
+                ctx.fillRect(x, y, cellSize, cellHeight);
+                ctx.strokeStyle = '#CCFF00';
+                ctx.strokeRect(x, y, cellSize, cellHeight);
+            } else {
+                ctx.strokeStyle = '#555';
+                ctx.strokeRect(x, y, cellSize, cellHeight);
+            }
+        }
+    });
+
+    // X-axis labels (draw number)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'center';
+    const xLabelStep = Math.max(1, Math.floor(limit / 50));
+    dataToProcess.forEach((draw, drawIdx) => {
+        if (drawIdx % xLabelStep === 0 || drawIdx === limit - 1) {
+            const x = labelWidth + drawIdx * cellSize + cellSize / 2;
+            ctx.fillText(draw.drawSystemId.toString(), x, topMargin - 5);
+        }
+    });
+
+    // Y-axis labels (numbers)
+    ctx.textAlign = 'right';
+    const yLabelStep = Math.max(1, Math.floor(numRange / 40));
+    for (let num = occStart; num <= occEnd; num++) {
+        if ((num - occStart) % yLabelStep === 0 || num === occEnd || num === occStart) {
+            const y = topMargin + (num - occStart) * cellHeight + cellHeight / 2 + 3;
+            ctx.fillText(num.toString(), labelWidth - 4, y);
+        }
+    }
+
+    // X-axis label
+    ctx.textAlign = 'center';
+    ctx.fillText('Draws →', labelWidth + limit * cellSize / 2, canvas.height - 3);
+
+    occStats.innerHTML = `
+        <div>Numbers: <strong>${occStart} – ${occEnd}</strong> (${numRange} numbers)</div>
+        <div>Draws analyzed: <strong>${limit}</strong></div>
+        <div>Cell: <span style="color: #4CAF50;">■</span> drawn &nbsp; <span style="color: #555;">□</span> not drawn</div>
     `;
 }
 
