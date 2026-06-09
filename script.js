@@ -858,6 +858,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+        
+        // Resize aggregate presence canvas
+        const aggrCanvas = document.getElementById('aggrCanvas');
+        if (aggrCanvas) {
+            const aggrContainer = aggrCanvas.parentElement;
+            if (aggrContainer) {
+                const containerWidth = aggrContainer.clientWidth;
+                if (containerWidth > 0) {
+                    aggrCanvas.width = containerWidth;
+                }
+            }
+        }
     });
     
     // Handle resize for draw matrix
@@ -917,6 +929,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Aggregate presence row wiring
+    const aggrShowBtn = document.getElementById('aggrShowBtn');
+    const aggrDrawCountInput = document.getElementById('aggrDrawCount');
+
+    if (aggrShowBtn) {
+        aggrShowBtn.addEventListener('click', updateAggregateRow);
+    }
+    if (aggrDrawCountInput) {
+        aggrDrawCountInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') updateAggregateRow();
+        });
+    }
+
     // Initial resize on load
     window.dispatchEvent(new Event('resize'));
 });
@@ -1287,6 +1312,86 @@ function updateOccMap() {
         <div>Numbers: <strong>${occStart} – ${occEnd}</strong> (${numRange} numbers)</div>
         <div>Draws analyzed: <strong>${limit}</strong></div>
         <div>Cell: <span style="color: #2196F3;">■</span> drawn &nbsp; <span style="color: #555;">□</span> not drawn</div>
+    `;
+}
+
+// Aggregate presence row function
+function updateAggregateRow() {
+    const canvas = document.getElementById('aggrCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const drawCount = parseInt(document.getElementById('aggrDrawCount').value) || 10;
+    const aggrStats = document.getElementById('aggrStats');
+
+    if (lottoData.length === 0) {
+        aggrStats.textContent = 'No data loaded. Click Analytics menu to load data.';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    const limit = Math.min(drawCount, lottoData.length);
+    const dataToProcess = lottoData.slice(0, limit);
+    const numRange = max - min + 1;
+
+    // Collect all numbers that appeared
+    const appeared = new Set();
+    dataToProcess.forEach(draw => {
+        draw.resultsJson.forEach(n => {
+            if (n >= min && n <= max) appeared.add(n);
+        });
+    });
+
+    // Layout
+    const labelWidth = 30;
+    const topMargin = 5;
+    const bottomMargin = 20;
+    const rightMargin = 10;
+    const cellSize = Math.max(6, Math.min(20, (canvas.width - labelWidth - rightMargin) / numRange));
+    const cellHeight = 30;
+
+    const chartWidth = numRange * cellSize + labelWidth + rightMargin;
+    canvas.width = Math.max(chartWidth, 300);
+    canvas.height = Math.max(cellHeight + topMargin + bottomMargin, 60);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const y = topMargin;
+
+    // Draw cells
+    for (let i = min; i <= max; i++) {
+        const x = labelWidth + (i - min) * cellSize;
+        if (appeared.has(i)) {
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(x, y, cellSize, cellHeight);
+            ctx.strokeStyle = '#B8860B';
+            ctx.strokeRect(x, y, cellSize, cellHeight);
+        } else {
+            ctx.strokeStyle = '#555';
+            ctx.strokeRect(x, y, cellSize, cellHeight);
+        }
+    }
+
+    // X-axis labels (numbers)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '9px Arial';
+    ctx.textAlign = 'center';
+    const xLabelStep = Math.max(1, Math.floor(numRange / 60));
+    for (let i = min; i <= max; i++) {
+        if ((i - min) % xLabelStep === 0 || i === min || i === max) {
+            const x = labelWidth + (i - min) * cellSize + cellSize / 2;
+            ctx.fillText(i.toString(), x, canvas.height - 5);
+        }
+    }
+
+    // Count how many numbers appeared
+    const appearedCount = appeared.size;
+    const pct = ((appearedCount / numRange) * 100).toFixed(1);
+
+    aggrStats.innerHTML = `
+        <div>Draws analyzed: <strong>${limit}</strong> | Range: <strong>${min} – ${max}</strong></div>
+        <div>Numbers that appeared: <strong>${appearedCount}</strong> / ${numRange} (${pct}%)</div>
+        <div>Cell: <span style="color: #FFD700;">■</span> appeared &nbsp; <span style="color: #555;">□</span> never appeared</div>
     `;
 }
 

@@ -155,6 +155,21 @@
                 </div>
                 <div id="occStats" style="margin-top: 10px; font-size: 14px; opacity: 0.9;"></div>
             </div>
+
+            <div class="analytics-container" style="margin-top: 20px;">
+                <div class="analytics-title">Aggregate Presence Row</div>
+                <p style="font-size: 14px; opacity: 0.8; margin-bottom: 10px;">Shows which numbers appeared across all analyzed draws. A single row where yellow = number appeared in at least one draw.</p>
+                <div style="margin-bottom: 15px;">
+                    <label for="aggrDrawCount">Draws to analyze:</label>
+                    <input type="number" id="aggrDrawCount" value="10" min="1" max="1000" style="width: 80px; padding: 8px; border-radius: 10px; border: 2px solid #ffd700; background: rgba(255,255,255,0.9); text-align: center; font-size: 14px; margin-left: 8px;">
+                    <button id="aggrShowBtn" style="margin-left: 10px; padding: 8px 20px; font-size: 14px;">SHOW</button>
+                </div>
+                <div class="histogram-container" style="overflow-x: auto;">
+                    <div class="histogram-title">Aggregate Presence</div>
+                    <canvas id="aggrCanvas" width="1000" height="80"></canvas>
+                </div>
+                <div id="aggrStats" style="margin-top: 10px; font-size: 14px; opacity: 0.9;"></div>
+            </div>
         </div>
     </div>
     <script src="./script.js"></script>
