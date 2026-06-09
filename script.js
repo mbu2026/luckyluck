@@ -1227,9 +1227,9 @@ function updateOccMap() {
             const y = topMargin + (num - occStart) * cellHeight;
             const isDrawn = drawnNumbers.includes(num);
             if (isDrawn) {
-                ctx.fillStyle = '#4CAF50';
+                ctx.fillStyle = '#2196F3';
                 ctx.fillRect(x, y, cellSize, cellHeight);
-                ctx.strokeStyle = '#CCFF00';
+                ctx.strokeStyle = '#BBDEFB';
                 ctx.strokeRect(x, y, cellSize, cellHeight);
             } else {
                 ctx.strokeStyle = '#555';
@@ -1238,15 +1238,19 @@ function updateOccMap() {
         }
     });
 
-    // X-axis labels (draw number)
+    // X-axis labels (draw number) - rotated 90 degrees
     ctx.fillStyle = '#FFFFFF';
     ctx.font = '9px Arial';
-    ctx.textAlign = 'center';
-    const xLabelStep = Math.max(1, Math.floor(limit / 50));
+    ctx.textAlign = 'right';
+    const xLabelStep = Math.max(1, Math.floor(limit / 60));
     dataToProcess.forEach((draw, drawIdx) => {
         if (drawIdx % xLabelStep === 0 || drawIdx === limit - 1) {
             const x = labelWidth + drawIdx * cellSize + cellSize / 2;
-            ctx.fillText(draw.drawSystemId.toString(), x, topMargin - 5);
+            ctx.save();
+            ctx.translate(x, topMargin - 30);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(draw.drawSystemId.toString(), 0, 0);
+            ctx.restore();
         }
     });
 
@@ -1267,7 +1271,7 @@ function updateOccMap() {
     occStats.innerHTML = `
         <div>Numbers: <strong>${occStart} – ${occEnd}</strong> (${numRange} numbers)</div>
         <div>Draws analyzed: <strong>${limit}</strong></div>
-        <div>Cell: <span style="color: #4CAF50;">■</span> drawn &nbsp; <span style="color: #555;">□</span> not drawn</div>
+        <div>Cell: <span style="color: #2196F3;">■</span> drawn &nbsp; <span style="color: #555;">□</span> not drawn</div>
     `;
 }
 
