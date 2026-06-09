@@ -937,9 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
         aggrShowBtn.addEventListener('click', updateAggregateRow);
     }
     if (aggrDrawCountInput) {
-        aggrDrawCountInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') updateAggregateRow();
-        });
+        aggrDrawCountInput.addEventListener('input', updateAggregateRow);
     }
 
     // Initial resize on load
