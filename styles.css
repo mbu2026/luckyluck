@@ -323,3 +323,17 @@ button:disabled {
     border-radius: 5px;
     max-width: 100%;
 }
+
+#coHistogramCanvas {
+    border: 1px solid #ffd700;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    max-width: 100%;
+}
+
+.co-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}

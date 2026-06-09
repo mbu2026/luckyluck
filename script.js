@@ -834,6 +834,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateAnalyticsHistogram();
             }
         }
+        
+        // Resize co-occurrence histogram canvas
+        const coCanvas = document.getElementById('coHistogramCanvas');
+        if (coCanvas) {
+            const coContainer = coCanvas.parentElement;
+            if (coContainer) {
+                const containerWidth = coContainer.clientWidth;
+                if (containerWidth > 0) {
+                    coCanvas.width = containerWidth;
+                }
+            }
+        }
     });
     
     // Handle resize for draw matrix
@@ -846,6 +858,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawMatrixCanvas.width = containerWidth;
             }
         }
+    }
+    
+    // Co-occurrence histogram wiring
+    const coNumbersInput = document.getElementById('coNumbers');
+    const coDrawCountInput = document.getElementById('coDrawCount');
+    const coAnalyzeBtn = document.getElementById('coAnalyzeBtn');
+    
+    if (coAnalyzeBtn) {
+        coAnalyzeBtn.addEventListener('click', updateCoHistogram);
+    }
+    
+    if (coNumbersInput) {
+        coNumbersInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                updateCoHistogram();
+            }
+        });
+    }
+    
+    if (coDrawCountInput) {
+        coDrawCountInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                updateCoHistogram();
+            }
+        });
     }
     
     // Initial resize on load
@@ -992,6 +1029,120 @@ function calculateDistanceSum(numbers) {
         sum += Math.abs(numbers[i] - numbers[i + 1]);
     }
     return sum;
+}
+
+// Co-occurrence histogram function
+function updateCoHistogram() {
+    const canvas = document.getElementById('coHistogramCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const coNumbersInput = document.getElementById('coNumbers');
+    const coDrawCountInput = document.getElementById('coDrawCount');
+    const coStats = document.getElementById('coStats');
+
+    const min = parseInt(minInput.value) || 1;
+    const max = parseInt(maxInput.value) || 49;
+    const drawCount = parseInt(coDrawCountInput.value) || 10;
+    const numbersStr = coNumbersInput.value.trim();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!numbersStr || lottoData.length === 0) {
+        coStats.textContent = 'Please enter at least one number and ensure data is loaded.';
+        return;
+    }
+
+    const targetNumbers = numbersStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    if (targetNumbers.length === 0) {
+        coStats.textContent = 'No valid numbers specified.';
+        return;
+    }
+
+    const validTargets = targetNumbers.filter(n => n >= min && n <= max);
+    if (validTargets.length === 0) {
+        coStats.textContent = `Specified numbers are outside the range [${min}, ${max}].`;
+        return;
+    }
+
+    const limit = Math.min(drawCount, lottoData.length);
+    const dataToProcess = lottoData.slice(0, limit);
+
+    // Count co-occurrences
+    const coFrequency = {};
+    for (let i = min; i <= max; i++) {
+        coFrequency[i] = 0;
+    }
+
+    let qualifyingDraws = 0;
+
+    dataToProcess.forEach(draw => {
+        const results = draw.resultsJson;
+        const hasTarget = validTargets.every(target => results.includes(target));
+        if (!hasTarget) return;
+
+        qualifyingDraws++;
+        results.forEach(n => {
+            if (n >= min && n <= max && !validTargets.includes(n)) {
+                coFrequency[n]++;
+            }
+        });
+    });
+
+    // Calculate max frequency for scaling
+    let maxFreq = 0;
+    for (let i = min; i <= max; i++) {
+        if (coFrequency[i] > maxFreq) {
+            maxFreq = coFrequency[i];
+        }
+    }
+
+    // Draw histogram
+    const totalBars = max - min + 1;
+    const totalSpacing = (totalBars - 1) * 2;
+    const availableWidth = canvas.width - totalSpacing;
+    const barWidth = Math.max(1, availableWidth / totalBars);
+    const rectHeight = 5;
+
+    for (let i = min; i <= max; i++) {
+        const freq = coFrequency[i];
+        const x = (i - min) * (barWidth + 2);
+
+        const isTarget = validTargets.includes(i);
+        ctx.fillStyle = isTarget ? '#FF5722' : '#FF9800';
+        ctx.strokeStyle = '#000000';
+        for (let j = 0; j < freq; j++) {
+            const y = canvas.height - 10 - (j * rectHeight) - rectHeight;
+            if (y > 0) {
+                ctx.fillRect(x, y, barWidth, rectHeight);
+                ctx.strokeRect(x, y, barWidth, rectHeight);
+            }
+        }
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        let labelX = x + barWidth / 2;
+        if (labelX < 5) labelX = 5;
+        else if (labelX > canvas.width - 5) labelX = canvas.width - 5;
+        ctx.fillText(i.toString(), labelX, canvas.height - 5);
+    }
+
+    // Find top co-occurring numbers
+    const freqPairs = [];
+    for (let i = min; i <= max; i++) {
+        if (coFrequency[i] > 0) {
+            freqPairs.push({number: i, frequency: coFrequency[i]});
+        }
+    }
+    freqPairs.sort((a, b) => b.frequency - a.frequency);
+    const top5 = freqPairs.slice(0, 5).map(p => `${p.number} (${p.frequency}x)`).join(', ');
+
+    coStats.innerHTML = `
+        <div>Analyzing numbers: <strong>${validTargets.join(', ')}</strong></div>
+        <div>Draws analyzed: <strong>${limit}</strong> | Draws containing target: <strong>${qualifyingDraws}</strong></div>
+        <div>Top co-occurring numbers: <strong>${top5 || 'None'}</strong></div>
+        <div style="margin-top: 5px; font-size: 12px; color: #FF9800;">Orange bars = co-occurrence count | <span style="color: #FF5722;">Red/orange bars</span> = specified number (shown if drawn alongside itself)</div>
+    `;
 }
 
 // Global variables
