@@ -1238,6 +1238,21 @@ function updateOccMap() {
         }
     });
 
+    // Vertical lines every 10 draws (yellow dashed) and every 50 draws (orange solid)
+    for (let drawIdx = 10; drawIdx <= limit; drawIdx += 10) {
+        const is50 = drawIdx % 50 === 0;
+        ctx.strokeStyle = is50 ? '#FF9800' : '#FFEB3B';
+        ctx.lineWidth = is50 ? 1.5 : 1;
+        ctx.setLineDash(is50 ? [] : [3, 3]);
+        const x = labelWidth + drawIdx * cellSize;
+        ctx.beginPath();
+        ctx.moveTo(x, topMargin);
+        ctx.lineTo(x, topMargin + numRange * cellHeight);
+        ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1;
+
     // X-axis labels (draw number) - rotated 90 degrees
     ctx.fillStyle = '#FFFFFF';
     ctx.font = '9px Arial';
